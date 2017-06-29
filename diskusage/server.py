@@ -13,7 +13,7 @@ app = Sanic()
 async def test(request, path=''):
     path = '/' / Path(path)
 
-    headers = {'x-unit': app.unit.name.lower(), 'x-path': path}
+    headers = {'X-unit': app.unit.name.lower(), 'X-path': path}
     u = get_usage(str(path), app.unit)
     return json(u, headers=headers)
 
