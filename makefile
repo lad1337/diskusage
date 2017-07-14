@@ -1,5 +1,5 @@
 image: wheels
-	docker build --tag diskusage:latest .
+	docker build --tag lad1337/diskusage:latest .
 
 wheels: builder
 	rm -f wheelhouse/diskusage-*.whl
