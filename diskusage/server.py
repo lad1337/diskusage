@@ -6,11 +6,12 @@ from sanic.response import json
 from diskusage import get_usage
 from diskusage import Unit
 
-app = Sanic()
+app = Sanic(__name__)
+app.static('/plugin.js', str(Path(__file__).parent / 'assets/plugin.js'))
 
 
-@app.route("/<path:.*?>", methods=['GET'])
-async def test(request, path=''):
+@app.route("/<path:[a-zA-Z0-9]*?>", methods=['GET'])
+async def usage(request, path=''):
     path = '/' / Path(path)
 
     headers = {'X-unit': app.unit.name.lower(), 'X-path': path}
@@ -26,5 +27,6 @@ def main():
     parser.add_argument('--unit', dest='unit', choices=[u.name for u in Unit],
                         default=Unit.BYTE.name, help='conversion unit')
     args = parser.parse_args()
+
     app.unit = getattr(Unit, args.unit)
     app.run(host="0.0.0.0", port=args.port)
