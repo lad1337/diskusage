@@ -29,7 +29,7 @@ def convert(usage, unit):
     }
 
 
-@cached(TTLCache(50, ttl=60))
+@cached(TTLCache(50, ttl=10))
 def get_usage(path, unit=Unit.BYTE):
     log.debug("getting usage for '{}' in {}".format(path, unit.name))
     usage = disk_usage(path)
