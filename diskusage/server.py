@@ -10,9 +10,9 @@ app = Sanic(__name__)
 app.static('/plugin.js', str(Path(__file__).parent / 'assets/plugin.js'))
 
 
-@app.route("/<path:[a-zA-Z0-9]*?>", methods=['GET'])
-async def usage(request, path=''):
-    path = '/' / Path(path)
+@app.route('/<disk:path>', methods=['GET'])
+async def usage(request, disk=''):
+    path = '/' / Path(disk)
 
     headers = {'X-unit': app.unit.name.lower(), 'X-path': path}
     u = get_usage(str(path), app.unit)
