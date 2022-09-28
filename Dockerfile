@@ -1,12 +1,22 @@
-FROM python:3.5-alpine
+FROM python:3.9-alpine as builder
 MAINTAINER Dennis Lutter
 
-ADD wheelhouse /wheelhouse
+RUN apk --update add --no-cache git build-base libffi-dev openssl-dev
 
-EXPOSE 4040
+ARG whl=/tmp/wheelhouse
+WORKDIR /tmp
+COPY . .
+RUN pip wheel --wheel-dir=${whl} .
 
-RUN ["/bin/sh", "-c", "pip install --find-links /wheelhouse /wheelhouse/diskusage-*.whl"]
-RUN ["rm", "-r", "/wheelhouse"]
+FROM python:3.9-alpine
+ARG whl=/tmp/wheelhouse
 
+COPY --from=builder ${whl} ${whl}
+RUN pip install --find-links ${whl} ${whl}/diskusage-*.whl
+RUN rm -r ${whl}
+
+# this is for click
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 ENTRYPOINT ["diskusage-server"]
 CMD ["--port", "4040", "--unit", "GIGABYTE"]

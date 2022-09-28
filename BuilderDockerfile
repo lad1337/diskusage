@@ -1,5 +1,0 @@
-FROM python:3.5-alpine
-MAINTAINER Dennis Lutter
-
-RUN apk add --no-cache build-base git
-WORKDIR /src
